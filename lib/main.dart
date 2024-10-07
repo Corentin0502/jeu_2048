@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         ),
         body: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, // 4 colonnes
+            crossAxisCount: 4,    // 4 colonnes
             childAspectRatio: 1, // Chaque cellule est carrée
           ),
           itemCount: 16, // 4x4 = 16 cellules
