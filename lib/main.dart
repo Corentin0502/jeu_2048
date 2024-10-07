@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4, // 4 colonnes
             childAspectRatio: 1, // Chaque cellule est carrée
-            padding: const EdgeInsets.all(20),
           ),
           itemCount: 16, // 4x4 = 16 cellules
           itemBuilder: (context, index) {
