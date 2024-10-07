@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
             ),
           ],
         ),
-        body: Tableau(title: "Tableau personnalisé"), // Utilisation du widget
+        body: Tableau(title: "Tableaupersonnalisé"), // Utilisation du widget
       ),
     );
   }
