@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:jeu_2048/widget/listeDeroulante.dart';
+import 'widgets/listeDeroulante.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,19 +27,19 @@ class MyApp extends StatelessWidget {
                 itemCount: 16, // 4x4 = 16 cellules
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: EdgeInsets.all(4), // Espacement entre les cellules
+                    margin: const EdgeInsets.all(4), // Espacement entre les cellules
                     height: 50.0,
                     color: Colors.orange,
                     alignment: Alignment.center,
                     child: Text(
                       'Cellule $index',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   );
                 },
               ),
             ),
-            ActionSheetExample(), // bouton selection objectif
+            const ActionSheetExample(), // bouton selection objectif
           ],
         ),
       ),
