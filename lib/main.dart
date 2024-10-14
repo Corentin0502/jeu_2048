@@ -5,8 +5,23 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int coup = 0; // Nombre de coups
+  String selectedValue = "2048"; // Valeur sélectionnée via le bouton
+
+  // Cette fonction sera passée à `ActionSheetExample` pour mettre à jour l'état
+  void _onSelectionChanged(String value) {
+    setState(() {
+      selectedValue = value; // Met à jour la valeur sélectionnée
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +29,23 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('2048'),
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.blueAccent,
         ),
         body: Column(
           children: [
+            Container(
+              color: Colors.cyanAccent, // Couleur de surlignage
+              padding: const EdgeInsets.symmetric(vertical: 8.0), // Pour ajouter un peu d'espace
+              child: Column(
+                children: [
+                  Text(
+                    "Coup : $coup",
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -26,20 +54,32 @@ class MyApp extends StatelessWidget {
                 ),
                 itemCount: 16, // 4x4 = 16 cellules
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(4), // Espacement entre les cellules
-                    height: 50.0,
-                    color: Colors.orange,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Cellule $index',
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        coup++; // Incrémente le nombre de coups
+                      });
+                      print('Coup : $coup');
+                    }, // Gérer le tap sur la case ici
+                    child: Container(
+                      margin: const EdgeInsets.all(1), // Espacement entre les cellules
+                      height: 50.0,
+                      color: Colors.grey,
+                      alignment: Alignment.center,
+                      child: Text(
+                        '$index',
+                        style: const TextStyle(color: Colors.black, fontSize: 16),
+                      ),
                     ),
                   );
                 },
               ),
             ),
-            const ActionSheetExample(), // bouton selection objectif
+            Text(
+              "Objectif à atteindre: $selectedValue", // Affiche la valeur sélectionnée
+              style: const TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            ActionSheetExample(onSelectionChanged: _onSelectionChanged), // Passe la fonction de callback
           ],
         ),
       ),
