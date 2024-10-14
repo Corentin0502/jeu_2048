@@ -7,6 +7,7 @@ class Coup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
+
       child: Container(
         color: Colors.cyanAccent, // Couleur de surlignage
         padding: EdgeInsets.symmetric(vertical: 8.0), // Pour ajouter un peu d'espace
@@ -17,4 +18,5 @@ class Coup extends StatelessWidget {
       ),
     );
   }
+
 }
