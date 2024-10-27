@@ -61,7 +61,7 @@ class _ActionSheetExampleState extends State<ActionSheetExample> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Taille interne du bouton
           borderRadius: BorderRadius.circular(20), // Bordures arrondies
           child: const Text(
-            "Sélection de l'objectif",
+            "objectif",
             style: TextStyle(
               fontSize: 16, // Taille du texte
               color: CupertinoColors.white, // Couleur du texte

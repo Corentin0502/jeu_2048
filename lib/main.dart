@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jeu_2048/widget/info.dart';
+import 'package:jeu_2048/widget/info_page.dart';
 import 'package:jeu_2048/widget/liste_deroulante.dart';
+import 'package:jeu_2048/widget/refresh.dart';
+import 'package:jeu_2048/widget/footer.dart'; // Import du footer
 
 void main() {
   runApp(const MyApp());
@@ -33,51 +35,61 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.blueAccent,
           centerTitle: true,
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Container(
-              color: Colors.cyanAccent,
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                "Coup : $coup",
-                style: TextStyle(fontSize: 30),
-              ),
-            ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 1,
+            Column(
+              children: [
+                Container(
+                  color: Colors.cyanAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    "Coup : $coup",
+                    style: const TextStyle(fontSize: 30),
+                  ),
                 ),
-                itemCount: 16,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      print('Tapped on tile $index');
-                      coup++;
-                      print('Coup : $coup');
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(1),
-                      height: 50.0,
-                      color: Colors.grey,
-                      alignment: Alignment.center,
-                      child: Text(
-                        '$index',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      childAspectRatio: 1,
                     ),
-                  );
-                },
-              ),
+                    itemCount: 16,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            coup++; // Incrémente le nombre de coups
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(1),
+                          height: 50.0,
+                          color: Colors.grey,
+                          alignment: Alignment.center,
+                          child: Text(
+                            '$index',
+                            style: const TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                padding: const EdgeInsets.all(60.0),
+                  child: Text(
+                    "Objectif à atteindre: $selectedValue",
+                    style: const TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              "Objectif à atteindre: $selectedValue", // Affiche la valeur sélectionnée
-              style: const TextStyle(fontSize: 20, color: Colors.black),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Footer(onSelectionChanged: _onSelectionChanged),
             ),
-            ActionSheetExample(onSelectionChanged: _onSelectionChanged),
-
-            FloatingButton(),
           ],
         ),
       ),
