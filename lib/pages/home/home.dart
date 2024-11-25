@@ -9,15 +9,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         children: [
-          HeaderSection(),
-          GrilleSection(title: ''),
-          ReviewSection(selectedValue: 2048),
+          const HeaderSection(),
+          Grille(title: ''),
+          const ReviewSection(selectedValue: 2048),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: const CustomNavigationBar(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 const backgroundColor = Color(0xfffaf8ef);
 const textColor = Color(0xff776e65);
+const textColorDefault = Color(0xff776e65);
 const textColorWhite = Color(0xfff9f6f2);
 const boardColor = Color(0xffbbada0);
 const emptyTileColor = Color(0xffcdc1b4);
