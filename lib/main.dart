@@ -5,104 +5,132 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false, // Désactiver la bannière de débogage
+      home: MyHomePage(), // Home défini comme un StatefulWidget
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  int score = 0; // Score
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-  int selectedValue = 2048; // Valeur sélectionnée via le bouton (stockée en tant qu'int)
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
 
-  // Cette fonction sera passée à `ActionSheetExample` pour mettre à jour l'état
+class _MyHomePageState extends State<MyHomePage> {
+  int score = 0; // Score actuel
+  int selectedValue = 2048; // Valeur sélectionnée via le bouton
+  int maxScore = 2048; // Score maximum, initialisé à la valeur de l'objectif sélectionné
+
   void _onSelectionChanged(int value) {
     setState(() {
-      selectedValue = value; // Met à jour la valeur sélectionnée avec un `int`
+      selectedValue = value; // Met à jour la valeur sélectionnée
+      maxScore = value; // Met à jour la limite de score
     });
   }
 
-  // Méthode pour tester la limite d'atteinte de l'objectif
-  void testLimiteObject(int score) {
-    setState(() {
-      // Si le score atteint ou dépasse l'objectif
-      if (score >= selectedValue) {
-        showDialog(
-          context: context,
-          builder: (context) => const AlertDialog(
-            content: Text('Objectif atteint !'),
-          ),
+  // Fonction pour afficher une boîte de dialogue
+  void _showMaxScoreMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Félicitations!'),
+          content: Text(
+              'Vous avez atteint le score maximum de $maxScore points ! Cliquez OK pour réinitialiser.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _resetScore(); // Réinitialise le score après confirmation
+              },
+            ),
+          ],
         );
-      }
+      },
+    );
+  }
+
+  // Réinitialiser le score
+  void _resetScore() {
+    setState(() {
+      score = 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( // Envelopper avec MaterialApp
-      debugShowCheckedModeBanner: false, // Désactiver la bannière de débogage
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('2048'),
-          backgroundColor: Colors.blueAccent,
-        ),
-        body: Column(
-          children: [
-            // Section pour afficher le score
-            Container(
-              color: Colors.cyanAccent, // Couleur de surlignage
-              padding: const EdgeInsets.symmetric(vertical: 8.0), // Pour ajouter un peu d'espace
-              child: Column(
-                children: [
-                  Text(
-                    "Score : $score", // Affiche le score
-                    style: const TextStyle(fontSize: 30),
-                  ),
-                ],
-              ),
-            ),
-            // Grille du jeu 4x4
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, // 4 colonnes
-                  childAspectRatio: 1, // Chaque cellule est carrée
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('2048'),
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: Column(
+        children: [
+          // Section pour afficher le score
+          Container(
+            color: Colors.cyanAccent,
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              children: [
+                Text(
+                  "Score : $score",
+                  style: const TextStyle(fontSize: 30),
                 ),
-                itemCount: 16, // 4x4 = 16 cellules
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        score += 50; // Incrémente le score
-                      });
-                      print('Score : $score');
-                      testLimiteObject(score); // Teste si l'objectif est atteint
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(1), // Espacement entre les cellules
-                      height: 50.0,
-                      color: Colors.grey,
-                      alignment: Alignment.center,
-                      child: Text(
-                        '$index', // Affiche l'indice de la cellule (exemple simplifié)
-                        style: const TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-                  );
-                },
+              ],
+            ),
+          ),
+          // Grille du jeu 4x4
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1,
               ),
+              itemCount: 16,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (score < maxScore) {
+                        score += 50; // Incrémente le score
+                      }
+                      if (score >= maxScore) {
+                        _showMaxScoreMessage(); // Affiche la boîte de dialogue
+                      }
+                    });
+                    print('Score : $score');
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(1),
+                    height: 50.0,
+                    color: Colors.grey,
+                    alignment: Alignment.center,
+                    child: Text(
+                      '$index',
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  ),
+                );
+              },
             ),
-            // Affiche l'objectif à atteindre
-            Text(
-              "Objectif à atteindre: $selectedValue",
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-            ),
-            // Widget de sélection d'objectif
-            ActionSheetExample(onSelectionChanged: _onSelectionChanged), // Passe la fonction de callback
-          ],
-        ),
+          ),
+          // Affiche l'objectif à atteindre
+          Text(
+            "Objectif à atteindre: $selectedValue",
+            style: const TextStyle(fontSize: 20, color: Colors.black),
+          ),
+          // Widget de sélection d'objectif
+          ActionSheet(onSelectionChanged: _onSelectionChanged),
+        ],
       ),
     );
   }

@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ActionSheetExample extends StatefulWidget {
+class ActionSheet extends StatefulWidget {
   final Function(int) onSelectionChanged; // Changer le type pour int
 
-  const ActionSheetExample({super.key, required this.onSelectionChanged});
+  const ActionSheet({super.key, required this.onSelectionChanged});
 
   @override
-  _ActionSheetExampleState createState() => _ActionSheetExampleState();
+  _ActionSheetState createState() => _ActionSheetState();
 }
 
-class _ActionSheetExampleState extends State<ActionSheetExample> {
+class _ActionSheetState extends State<ActionSheet> {
   int obj1 = 2048;
   int obj2 = 1024;
   int obj3 = 512;
