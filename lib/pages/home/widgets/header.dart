@@ -8,7 +8,7 @@ class HeaderSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(25),
       //color: Colors.white,
-      height: 120,
+      height: 110,
       child: Stack(
         children: [
           const Positioned(

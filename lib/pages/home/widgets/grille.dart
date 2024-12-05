@@ -195,7 +195,7 @@ class _TableauState extends State<Grille> {
         children: [
           Container(
             width: gridSize,
-            height: gridSize,  // Suppression de l'ajout de 30 pour une hauteur symétrique
+            height: 325,  // Suppression de l'ajout de 30 pour une hauteur symétrique
             padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: buttonColor,
@@ -205,8 +205,9 @@ class _TableauState extends State<Grille> {
               children: [
                 Expanded(
                   child: GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
                       childAspectRatio: 1,
                       crossAxisSpacing: 7,
@@ -249,7 +250,7 @@ class _TableauState extends State<Grille> {
                           }
                         },
                         child: Container(
-                          margin: EdgeInsets.all(1),
+                          margin: const EdgeInsets.all(1),
                           decoration: BoxDecoration(
                             color: caseColor,
                             borderRadius: BorderRadius.circular(10),

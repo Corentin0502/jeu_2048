@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:jeu_2048/pages/home/widgets/custom_navigation_bar.dart';
 import 'liste_deroulante.dart';
 
-class SettingsSection extends StatelessWidget {
+class SettingsSection extends StatefulWidget {
   const SettingsSection({super.key});
 
-  // Ajout d'une méthode pour gérer la sélection
-  void onSelectionChanged(String value) {
-    debugPrint('Nouvelle sélection : $value'); // Pour débogage ou autre logique
-  }
+  @override
+  State<SettingsSection> createState() => _SettingsSectionState();
+}
+
+class _SettingsSectionState extends State<SettingsSection> {
+  bool isLargeGrid = false;
+  bool isInverseMode = false;
+  bool isRandomMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +28,6 @@ class SettingsSection extends StatelessWidget {
       body: Column(
         children: [
           Row(
-            children: [
-              const Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    "Choix de l'objectif à atteindre :",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              ActionSheetExample(onSelectionChanged: onSelectionChanged),
-            ],
-          ),
-          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Expanded(
@@ -50,8 +40,8 @@ class SettingsSection extends StatelessWidget {
                 ),
               ),
               const Text(
-                  'Light',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                'Light',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 10),
               Switch(
@@ -72,9 +62,9 @@ class SettingsSection extends StatelessWidget {
               const Spacer(flex: 1,)
             ],
           ),
-          const Row(
+          Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
@@ -83,13 +73,20 @@ class SettingsSection extends StatelessWidget {
                   ),
                 ),
               ),
-              Checkbox(value: true, onChanged: null),
-              Spacer(flex: 1,)
+              Checkbox(
+                value: isLargeGrid,
+                onChanged: (value) {
+                  setState(() {
+                    isLargeGrid = value!;
+                  });
+                },
+              ),
+              const Spacer(flex: 1,)
             ],
           ),
-          const Row(
+          Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
@@ -98,13 +95,20 @@ class SettingsSection extends StatelessWidget {
                   ),
                 ),
               ),
-              Checkbox(value: true, onChanged: null),
-              Spacer(flex: 1,)
+              Checkbox(
+                value: isInverseMode,
+                onChanged: (value) {
+                  setState(() {
+                    isInverseMode = value!;
+                  });
+                },
+              ),
+              const Spacer(flex: 1,)
             ],
           ),
-          const Row(
+          Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Text(
@@ -113,8 +117,15 @@ class SettingsSection extends StatelessWidget {
                   ),
                 ),
               ),
-              Checkbox(value: true, onChanged: null),
-              Spacer(flex: 1,)
+              Checkbox(
+                value: isRandomMode,
+                onChanged: (value) {
+                  setState(() {
+                    isRandomMode = value!;
+                  });
+                },
+              ),
+              const Spacer(flex: 1,)
             ],
           ),
         ],
