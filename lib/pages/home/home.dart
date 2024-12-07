@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           const HeaderSection(),
-          Grille(title: ''),
+          Grille(),
           const ReviewSection(selectedValue: 2048),
         ],
       ),

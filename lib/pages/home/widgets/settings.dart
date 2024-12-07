@@ -1,19 +1,20 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:jeu_2048/pages/home/widgets/custom_navigation_bar.dart';
-import 'liste_deroulante.dart';
+
+import 'custom_navigation_bar.dart';
+
 
 class SettingsSection extends StatefulWidget {
-  const SettingsSection({super.key});
+  final Function(bool) onInverseModeChanged;
+
+  const SettingsSection({super.key, required this.onInverseModeChanged});
 
   @override
   State<SettingsSection> createState() => _SettingsSectionState();
 }
 
 class _SettingsSectionState extends State<SettingsSection> {
-  bool isLargeGrid = false;
-  bool isInverseMode = false;
-  bool isRandomMode = false;
+  bool isInverseMode = false; // Initialisation du mode inversé
 
   @override
   Widget build(BuildContext context) {
@@ -58,72 +59,6 @@ class _SettingsSectionState extends State<SettingsSection> {
               const Text(
                 'Dark',
                 style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const Spacer(flex: 1,)
-            ],
-          ),
-          Row(
-            children: [
-              const Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    "Grille 8*8 :",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              Checkbox(
-                value: isLargeGrid,
-                onChanged: (value) {
-                  setState(() {
-                    isLargeGrid = value!;
-                  });
-                },
-              ),
-              const Spacer(flex: 1,)
-            ],
-          ),
-          Row(
-            children: [
-              const Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    "Mode inversée :",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              Checkbox(
-                value: isInverseMode,
-                onChanged: (value) {
-                  setState(() {
-                    isInverseMode = value!;
-                  });
-                },
-              ),
-              const Spacer(flex: 1,)
-            ],
-          ),
-          Row(
-            children: [
-              const Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    "Mode Alétoire :",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              Checkbox(
-                value: isRandomMode,
-                onChanged: (value) {
-                  setState(() {
-                    isRandomMode = value!;
-                  });
-                },
               ),
               const Spacer(flex: 1,)
             ],

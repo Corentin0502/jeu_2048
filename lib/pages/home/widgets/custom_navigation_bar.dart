@@ -47,7 +47,7 @@ class CustomNavigationBar extends StatelessWidget {
             if (index == 2) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsSection()),
+                MaterialPageRoute(builder: (context) => SettingsSection(onInverseModeChanged: (bool ) {  },)),
               );
             }
           },
