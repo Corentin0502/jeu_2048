@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class ActionSheetExample extends StatefulWidget {
-  final Function(String) onSelectionChanged; // Callback pour envoyer la sélection à main.dart
+class ActionSheet extends StatefulWidget {
+  final Function(int) onSelectionChanged; // Changer le type pour int
 
-  const ActionSheetExample({super.key, required this.onSelectionChanged});
+  const ActionSheet({super.key, required this.onSelectionChanged});
 
   @override
-  _ActionSheetExampleState createState() => _ActionSheetExampleState();
+  _ActionSheetState createState() => _ActionSheetState();
 }
 
-class _ActionSheetExampleState extends State<ActionSheetExample> {
+class _ActionSheetState extends State<ActionSheet> {
+  int obj1 = 2048;
+  int obj2 = 1024;
+  int obj3 = 512;
+  int obj4 = 256;
+
   // Méthode pour afficher le CupertinoActionSheet
   void _showActionSheet(BuildContext context) {
     showCupertinoModalPopup<void>(
@@ -19,31 +25,31 @@ class _ActionSheetExampleState extends State<ActionSheetExample> {
           CupertinoActionSheetAction(
             isDefaultAction: true,
             onPressed: () {
-              widget.onSelectionChanged('2048'); // Envoie la valeur sélectionnée à main.dart
+              widget.onSelectionChanged(2048); // Envoie la valeur sélectionnée en tant qu'int
               Navigator.pop(context);
             },
-            child: const Text('2048'),
+            child: Text('${obj1.toString()}'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
-              widget.onSelectionChanged('1024');
+              widget.onSelectionChanged(1024); // Envoie la valeur sélectionnée en tant qu'int
               Navigator.pop(context);
             },
-            child: const Text('1024'),
+            child: Text('${obj2.toString()}'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
-              widget.onSelectionChanged('512');
+              widget.onSelectionChanged(512); // Envoie la valeur sélectionnée en tant qu'int
               Navigator.pop(context);
             },
-            child: const Text('512'),
+            child: Text('${obj3.toString()}'),
           ),
           CupertinoActionSheetAction(
             onPressed: () {
-              widget.onSelectionChanged('256');
+              widget.onSelectionChanged(256); // Envoie la valeur sélectionnée en tant qu'int
               Navigator.pop(context);
             },
-            child: const Text('256'),
+            child: Text('${obj4.toString()}'),
           ),
         ],
       ),
@@ -52,23 +58,21 @@ class _ActionSheetExampleState extends State<ActionSheetExample> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0), // Décalage de 20px par rapport à tous les bords de l'écran
-        child: CupertinoButton(
-          onPressed: () => _showActionSheet(context),
-          color: CupertinoColors.activeBlue, // Couleur du bouton
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Taille interne du bouton
-          borderRadius: BorderRadius.circular(20), // Bordures arrondies
-          child: const Text(
-            "objectif",
-            style: TextStyle(
-              fontSize: 16, // Taille du texte
-              color: CupertinoColors.white, // Couleur du texte
-            ),
+    return SafeArea(// Décalage de 20px par rapport à tous les bords de l'écran
+      child: CupertinoButton(
+        onPressed: () => _showActionSheet(context),
+        color: CupertinoColors.activeBlue, // Couleur du bouton
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Taille interne du bouton
+        borderRadius: BorderRadius.circular(20), // Bordures arrondies
+        child: const Text(
+          "Sélection de l'objectif",
+          style: TextStyle(
+            fontSize: 16, // Taille du texte
+            color: CupertinoColors.white, // Couleur du texte
           ),
         ),
       ),
+
     );
   }
 }

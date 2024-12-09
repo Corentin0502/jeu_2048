@@ -3,6 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../models/colors.dart';
 
 class Grille extends StatefulWidget {
+  final Function onScoreUpdated;
+  final int objective;
+  final VoidCallback onGameOver;  // Callback pour fin de jeu
+  final VoidCallback onObjectiveAchieved; // Callback pour atteindre l'objectif
+  final Function(int) onMoveCountUpdated; // Nouvelle fonction de rappel pour moveCount
+
+
+  Grille({
+    Key? key,
+    required this.onScoreUpdated,
+    required this.objective,
+    required this.onGameOver,
+    required this.onObjectiveAchieved,
+    required this.onMoveCountUpdated, // Ajouter le callback
+  }) : super(key: key);
+
   @override
   _TableauState createState() => _TableauState();
 }
@@ -14,11 +30,25 @@ class _TableauState extends State<Grille> {
   bool modeInverse = false; // Mode inversé désactivé par défaut
   bool isMoving = false; // Indique si un mouvement est en cours
   bool randomMode = false; // Mode random désactivé par défaut
+  int currentScore = 0; // Déclarez la variable currentScore
+  bool isPopupShowing = false; // Empêche plusieurs popups d'atteinte d'objectif
+
+  // Ajout du compteur de coups
+  int moveCount = 0; // Nombre de coups effectués
 
   @override
   void initState() {
     super.initState();
     _initializeGrid();
+  }
+
+  // Fonction pour incrémenter le compteur de coups à chaque mouvement
+  void _incrementMoveCount() {
+    setState(() {
+      moveCount++;
+    });
+    // Notifier le parent de la mise à jour
+    widget.onMoveCountUpdated(moveCount);
   }
 
   void _initializeGrid({bool isRandomMode = false}) {
@@ -66,7 +96,6 @@ class _TableauState extends State<Grille> {
     });
   }
 
-
   void _addNewTile() {
     List<int> emptyIndices = [];
     for (int i = 0; i < gridValues.length; i++) {
@@ -83,10 +112,17 @@ class _TableauState extends State<Grille> {
     isMoving = true;
 
     setState(moveFunction); // Appliquer le mouvement
-    await Future.delayed(const Duration(milliseconds: 100)); // Attendre 1 seconde
-    setState(() {
-      _addNewTile();
-    });
+    await Future.delayed(const Duration(milliseconds: 100)); // Attendre une animation
+    _addNewTile(); // Ajouter une nouvelle tuile
+
+    // Notifier le parent du nouveau score
+    widget.onScoreUpdated(currentScore);
+
+    // Vérifier si l'objectif est atteint ou si le jeu est perdu
+    _checkObjectiveAndGameOver();
+
+    // Incrémenter le compteur de coups après un mouvement valide
+    _incrementMoveCount();
 
     isMoving = false; // Débloquer après l'ajout de la tuile
   }
@@ -116,10 +152,9 @@ class _TableauState extends State<Grille> {
         }
       }
     });
+    // Recalculer et mettre à jour le score
+    _updateScore(); // Mise à jour du score après le déplacement
   }
-
-
-
 
   void _moveDown() {
     _performMove(() {
@@ -146,9 +181,9 @@ class _TableauState extends State<Grille> {
         }
       }
     });
+    // Recalculer et mettre à jour le score
+    _updateScore(); // Mise à jour du score après le déplacement
   }
-
-
 
   void _moveLeft() {
     _performMove(() {
@@ -175,6 +210,8 @@ class _TableauState extends State<Grille> {
         }
       }
     });
+    // Recalculer et mettre à jour le score
+    _updateScore(); // Mise à jour du score après le déplacement
   }
 
   void _moveRight() {
@@ -202,28 +239,24 @@ class _TableauState extends State<Grille> {
         }
       }
     });
+    // Recalculer et mettre à jour le score
+    _updateScore(); // Mise à jour du score après le déplacement
   }
 
-
-
-
   List<int?> _mergeTiles(List<int?> tiles) {
-    List<int?> merged = List.filled(tiles.length, null); // Résultat final
-    List<bool> hasMerged = List.filled(tiles.length, false); // Indique si une tuile a déjà fusionné
-    int targetIndex = 0; // Index où placer la prochaine tuile
+    List<int?> merged = List.filled(tiles.length, null);
+    List<bool> hasMerged = List.filled(tiles.length, false);
+    int targetIndex = 0;
 
     for (int i = 0; i < tiles.length; i++) {
       if (tiles[i] != null) {
-        if (
-        targetIndex > 0 &&
+        if (targetIndex > 0 &&
             merged[targetIndex - 1] == tiles[i] &&
-            !hasMerged[targetIndex - 1]
-        ) {
-          // Fusionner avec la tuile précédente
+            !hasMerged[targetIndex - 1]) {
           merged[targetIndex - 1] = merged[targetIndex - 1]! * 2;
-          hasMerged[targetIndex - 1] = true; // Marquer comme fusionnée
+          currentScore += merged[targetIndex - 1]!; // Mise à jour du score
+          hasMerged[targetIndex - 1] = true;
         } else {
-          // Déplacer la tuile sans fusion
           merged[targetIndex] = tiles[i];
           targetIndex++;
         }
@@ -233,6 +266,60 @@ class _TableauState extends State<Grille> {
     return merged;
   }
 
+  void _checkObjectiveAndGameOver() {
+    // Vérifier si l'objectif est atteint
+    if (currentScore >= widget.objective && !isPopupShowing) {
+      // Afficher le pop-up
+      setState(() {
+        isPopupShowing = true;
+      });
+
+      // Appeler le pop-up après un délai et réinitialiser la grille
+      //widget.onObjectiveAchieved();  // Affiche le pop-up
+      Future.delayed(const Duration(milliseconds: 200), () {
+        setState(() {
+          isPopupShowing = false;
+        });
+        _resetGrid(isRandomMode: randomMode); // Réinitialiser la grille
+      });
+    }
+
+    // Vérifier si le jeu est terminé
+    if (_isGameOver()) {
+      widget.onGameOver(); // Affiche le pop-up de fin de jeu
+      _resetGrid(isRandomMode: randomMode); // Réinitialiser la grille
+    }
+  }
+
+  bool _isGameOver() {
+    // Vérifier si toutes les cases sont remplies
+    for (int i = 0; i < gridValues.length; i++) {
+      if (gridValues[i] == null) return false; // Il y a encore une case vide
+    }
+
+    // Vérifier s'il est possible de fusionner
+    for (int i = 0; i < gridValues.length; i++) {
+      int currentValue = gridValues[i] ?? 0;
+      if (i % gridSize != gridSize - 1 && currentValue == gridValues[i + 1]) {
+        return false; // Fusion possible horizontalement
+      }
+      if (i + gridSize < gridValues.length && currentValue == gridValues[i + gridSize]) {
+        return false; // Fusion possible verticalement
+      }
+    }
+
+    return true; // Si aucune fusion n'est possible
+  }
+
+  void _updateScore() {
+    currentScore = 0; // Réinitialiser le score
+    for (var tile in gridValues) {
+      if (tile != null) {
+        currentScore += tile; // Additionner les valeurs des tuiles non nulles
+      }
+    }
+    widget.onScoreUpdated(currentScore); // Notifier la mise à jour du score
+  }
 
   @override
   Widget build(BuildContext context) {

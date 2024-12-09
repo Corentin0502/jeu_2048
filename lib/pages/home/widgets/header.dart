@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class HeaderSection extends StatelessWidget {
-  const HeaderSection({super.key});
+  final int moveCount; // Ajout d'un paramètre pour le compteur
+
+  const HeaderSection({super.key, required this.moveCount});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(25),
-      //color: Colors.white,
       height: 110,
       child: Stack(
         children: [
@@ -31,9 +32,9 @@ class HeaderSection extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
-                "Coup : 100",
-                style: TextStyle(
+              child: Text(
+                "Coup : $moveCount", // Utilisation du moveCount dynamique
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
